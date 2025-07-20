@@ -1,44 +1,33 @@
-import React, { useEffect, useState } from "react";
-import { collection, onSnapshot, query, orderBy } from "firebase/firestore";
-import db from "./firebase";
+import React from "react";
+import "./App.css";
 
-const Admin = () => {
-  const [orders, setOrders] = useState([]);
-
-  useEffect(() => {
-    const q = query(collection(db, "orders"), orderBy("timestamp", "desc"));
-    const unsubscribe = onSnapshot(q, (snapshot) => {
-      setOrders(snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() })));
-    });
-    return () => unsubscribe();
-  }, []);
-
+function Admin() {
   return (
-    <div style={{ padding: "20px" }}>
-      <h2>📦 Incoming Orders</h2>
-      {orders.length === 0 ? (
-        <p>No orders yet</p>
-      ) : (
-        orders.map((order) => (
-          <div key={order.id} style={{ border: "1px solid #ccc", margin: "10px 0", padding: "10px", borderRadius: "8px" }}>
-            <p><strong>Name:</strong> {order.name}</p>
-            <p><strong>Phone:</strong> {order.phone}</p>
-            <p><strong>Address:</strong> {order.address}</p>
-            <p><strong>Total:</strong> ₹{order.total}</p>
-            <p><strong>Items:</strong></p>
-            <ul>
-              {order.items.map((item, index) => (
-                <li key={index}>{item.name} x {item.quantity} - ₹{item.price}</li>
-              ))}
-            </ul>
-            <p style={{ fontSize: "12px", color: "gray" }}>
-              {order.timestamp?.toDate().toLocaleString()}
-            </p>
-          </div>
-        ))
-      )}
+    <div className="container mx-auto px-4 py-6">
+      <header className="bg-blue-600 text-white p-4 md:p-6 lg:p-8 rounded-md text-center md:text-left">
+        <h1 className="text-xl md:text-3xl lg:text-4xl font-bold">Admin Dashboard</h1>
+      </header>
+
+      <section className="mt-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="w-full md:w-1/2 lg:w-1/3 bg-white shadow-md rounded-lg p-4">
+          <h2 className="text-lg font-semibold">Orders</h2>
+          <p className="text-gray-600 text-sm md:text-base">View and manage recent orders.</p>
+        </div>
+        <div className="w-full md:w-1/2 lg:w-1/3 bg-white shadow-md rounded-lg p-4">
+          <h2 className="text-lg font-semibold">Inventory</h2>
+          <p className="text-gray-600 text-sm md:text-base">Track stock and product availability.</p>
+        </div>
+        <div className="w-full md:w-1/2 lg:w-1/3 bg-white shadow-md rounded-lg p-4">
+          <h2 className="text-lg font-semibold">Users</h2>
+          <p className="text-gray-600 text-sm md:text-base">Manage user accounts and roles.</p>
+        </div>
+      </section>
+
+      <footer className="mt-8 text-center text-gray-500 text-sm">
+        © 2025 OceanBites Admin Panel.
+      </footer>
     </div>
   );
-};
+}
 
 export default Admin;
